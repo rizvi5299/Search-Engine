@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Engine</title>
+    <style>
+        body { 
+            padding: 20px;
+            background-color: #535353;
+        }
+        h1 { 
+            text-align: center; 
+            margin-bottom: 30px;
+            color: white;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .search-box { 
+            display: flex; 
+            margin-bottom: 30px; 
+        }
+        input { 
+            flex: 1; 
+            padding: 10px; 
+            font-size: 16px; 
+            border: 1px solid #ddd; 
+        }
+        button { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+        }
+        button:hover { 
+            background: #0056b3; 
+        }
+        .result { 
+            margin-bottom: 25px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid #eee;
+            background-color: #f5fff5;
+            padding-left: 15px;
+            padding-top: 10px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+        .result-title { 
+            font-size: 18px; 
+            color: #1a0dab; 
+            margin-bottom: 5px; 
+        }
+        .result-url { 
+            color: #006621; 
+            font-size: 14px; 
+            margin-bottom: 5px; 
+        }
+        .result-scores { 
+            font-size: 12px; 
+            color: #666; 
+        }
+        #time-taken {
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌐My Search Engine🌐</h1>
+    
+    <div class="search-box">
+        <input type="text" id="query" placeholder="Enter search query" 
+               onkeypress="if(event.key==='Enter') search()">
+        <button onclick="search()">Search</button>
+    </div>
+    <div id="time-taken"></div>
+    <div id="results"></div>
+    
+<script>
+    function search() {
+        const query = document.getElementById('query').value.trim();
+        if (!query) return;
+        
+        document.getElementById('results').innerHTML = '<p>Searching...</p>';
+        document.getElementById('time-taken').innerHTML = '';
+        
+        fetch(`/search?q=${encodeURIComponent(query)}`)
+            .then(r => r.json())
+            .then(data => {
+                // Display time taken
+                document.getElementById('time-taken').innerHTML = 
+                    `<p>Search completed in ${data.time.toFixed(4)} seconds (${data.results.length} results)</p>`;
+                
+                if (data.results.length === 0) {
+                    document.getElementById('results').innerHTML = '<p>No results found</p>';
+                    return;
+                }
+                
+                let html = '';
+                data.results.forEach((r, i) => {
+                    html += `
+                        <div class="result">
+                            <div class="result-title">${i+1}. ${r.title || 'Untitled'}</div>
+                            <div class="result-url"> <a href="${r.url}" target="_blank" rel="noopener noreferrer">${r.url}</a> </div>
+                            <div class="result-scores">
+                                Score: ${r.score.toFixed(3)} | 
+                                BM25: ${r.bm25.toFixed(3)} | 
+                                PageRank: ${r.pagerank.toFixed(3)}
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('results').innerHTML = html;
+            });
+    }
+    document.getElementById('query').focus();
+</script>
+</body>
+</html>
