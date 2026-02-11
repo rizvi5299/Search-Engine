@@ -45,10 +45,8 @@ pip install beautifulsoup4 networkx rank_bm25 flask
 Run the components in the following order:
 
 ```bash
-python crawler.py
-python indexer.py
-python pagerank.py
-python webapp.py
+docker build -t search-engine .
+docker run -p 5000:5000 search-engine
 ```
 
 
