@@ -34,7 +34,7 @@ This project implements a small-scale search engine designed for Python-related 
    `webapp.py` exposes a Flask-based interface where users can submit queries and view ranked results.
 
 ## How to Run
-Run the components in the following order:
+Run these commands:
 
 ```bash
 docker build -t search-engine .
