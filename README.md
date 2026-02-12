@@ -33,22 +33,12 @@ This project implements a small-scale search engine designed for Python-related 
 5. **Web Interface**  
    `webapp.py` exposes a Flask-based interface where users can submit queries and view ranked results.
 
-## Installation
-
-Install the required libraries:
-
-```bash
-pip install beautifulsoup4 networkx rank_bm25 flask
-```
-
 ## How to Run
 Run the components in the following order:
 
 ```bash
-python crawler.py
-python indexer.py
-python pagerank.py
-python webapp.py
+docker build -t search-engine .
+docker run -p 5000:5000 search-engine
 ```
 
 
